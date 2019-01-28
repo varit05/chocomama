@@ -1,0 +1,72 @@
+$primary: #30a0ee;
+$error: #ef5777;
+$success: #1abc9c;
+$light: #f5f8fa;
+$medium: #657786;
+$dark: #34495e;
+$white: #fff;
+$nav-color: #2c3e50;
+#app {
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: $nav-color;
+  background: #eee;
+}
+.content {
+  min-height: 84vh;
+  padding: 10px;
+}
+.slide-fade-enter-active {
+  transition: all 0.3s ease;
+}
+.slide-fade-leave-active {
+  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+}
+.slide-fade-enter, .slide-fade-leave-to
+/* .slide-fade-leave-active below version 2.1.8 */ {
+  transform: translateX(10px);
+  opacity: 0;
+}
+
+.fade-enter-active {
+  transition: opacity 0.5s;
+}
+.fade-leave-active {
+  transition: opacity 0s;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.loading {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba($dark, 0.4);
+  z-index: 9999;
+
+  p {
+    background: $white;
+    width: 150px;
+    text-align: center;
+    margin: 40vh auto 0;
+    padding: 40px 0;
+    border-radius: 3px;
+    box-shadow: 0 0 20px 0 rgba($dark, 0.5);
+  }
+}
+
+.error-msg {
+  margin-top: 1rem;
+  text-align: center;
+  p {
+    color: $error;
+    margin: 0;
+  }
+}
