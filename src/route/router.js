@@ -2,14 +2,14 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 
 import routes from "./routes";
-import { getUserDetails } from "@/common/storage.service";
+import firebase from "firebase";
 
 Vue.use(VueRouter);
 
 function guardRoute(to, from, next) {
-  const getToken = JSON.parse(getUserDetails());
+  const user = firebase.auth().currentUser;
 
-  if (!getToken) {
+  if (!user) {
     next({ path: "/login" });
   } else {
     next();

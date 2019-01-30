@@ -21,10 +21,11 @@ if (!Firebase.apps.length) {
 const db = Firebase.database();
 const auth = Firebase.auth();
 const currentUser = auth.currentUser;
-
+const cartURL = `cart`;
 const usersCollection = db.ref("users");
 const productsCollection = db.ref("products");
+const cartCollection = db.ref(cartURL);
 
-const fb = { db, auth, currentUser, usersCollection, productsCollection };
+let fb = { db, auth, currentUser, usersCollection, productsCollection, cartCollection };
 
 export default fb;

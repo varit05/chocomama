@@ -1,20 +1,18 @@
 <template>
   <div class="col-12 col-md-8 offset-md-2">
     <transition name="fade">
-      <div v-if="performingRequest" class="loading"><p>Loading...</p></div>
+      <div v-if="performingRequest" class="loading"><div /></div>
     </transition>
     <div class="card">
       <div class="card-header">
         <h1>{{ msg }}</h1>
       </div>
       <div class="card-body">
-        <form @submit="onSubmit" @reset="onReset">
+        <form @submit="onSubmit" @reset.prevent="onReset">
           <div class="row my-1">
             <div class="col-sm">
               <div class="form-group">
-                <label for="Your Name" class="col-4" align="right"
-                  >Your Name:</label
-                >
+                <label for="Your Name" class="col-4" align="right">Your Name:</label>
                 <input
                   class="col-4 form-control d-inline"
                   type="text"
@@ -28,9 +26,7 @@
           <div class="row my-1">
             <div class="col-sm">
               <div class="form-group">
-                <label for="Email address:" class="col-4" align="right"
-                  >Email address:</label
-                >
+                <label for="Email address:" class="col-4" align="right">Email address:</label>
                 <input
                   class="col-4 form-control d-inline"
                   type="email"
@@ -44,9 +40,7 @@
           <div class="row my-1">
             <div class="col-sm">
               <div class="form-group">
-                <label for="Password" class="col-4" align="right"
-                  >Password:</label
-                >
+                <label for="Password" class="col-4" align="right">Password:</label>
                 <input
                   class="col-4 form-control d-inline"
                   type="password"
@@ -59,30 +53,16 @@
           </div>
           <div class="row">
             <div class="col">
-              <button
-                class="btn btn-outline-primary m-2"
-                type="submit"
-                variant="primary"
-              >
-                Submit
-              </button>
-              <button
-                class="btn btn-outline-secondary"
-                type="reset"
-                variant="danger"
-              >
-                Reset
-              </button>
+              <button class="btn btn-outline-primary m-2" type="submit" variant="primary">Submit</button>
+              <button class="btn btn-outline-secondary" type="reset" variant="danger">Reset</button>
             </div>
           </div>
         </form>
-        <div class="row">
-          <div class="col">
-            <p>
-              Already Registered?
-              <router-link to="/login">Login</router-link>
-            </p>
-          </div>
+        <div class="col">
+          <p>
+            Already Registered?
+            <router-link to="/login">Login</router-link>
+          </p>
         </div>
       </div>
     </div>
@@ -96,8 +76,6 @@
 
 <script>
 import fb from "@/common/firebase.config";
-import { saveUserDetails } from "@/common/storage.service";
-import firebase from "firebase";
 export default {
   name: "Register",
   data() {
@@ -117,8 +95,7 @@ export default {
       evt.preventDefault();
       this.signup();
     },
-    onReset(evt) {
-      evt.preventDefault();
+    onReset() {
       this.signupForm.email = "";
       this.signupForm.name = "";
       this.signupForm.password = "";
@@ -126,29 +103,32 @@ export default {
     signup() {
       this.performingRequest = true;
       fb.auth
-        .createUserWithEmailAndPassword(
-          this.signupForm.email,
-          this.signupForm.password
-        )
+        .createUserWithEmailAndPassword(this.signupForm.email, this.signupForm.password)
         .then(userDetails => {
-          let user = userDetails;
-          firebase
-            .auth()
-            .currentUser.updateProfile({ displayName: this.signupForm.name })
+          let name = this.$options.filters.capitalize(this.signupForm.name);
+          fb.auth.currentUser
+            .updateProfile({
+              displayName: name
+            })
             .then(updateUser => {
-              console.log("Register User ", user);
-              this.$root.currentUserDetails = user;
-              saveUserDetails(JSON.stringify(user));
               this.performingRequest = false;
+              this.$toastr.success("Register Successfully", `Hi ${this.signupForm.name}`);
               this.$router.push("/");
             });
         })
         .catch(err => {
-          // console.log(err);
-          // this.onReset();
+          this.onReset();
           this.performingRequest = false;
+          this.$toastr.error(err.message, `Oops! Error`);
           this.errorMsg = err.message;
         });
+    }
+  },
+  filters: {
+    capitalize: function(value) {
+      if (!value) return "";
+      value = value.toString();
+      return value.charAt(0).toUpperCase() + value.slice(1);
     }
   }
 };

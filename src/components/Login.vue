@@ -1,8 +1,6 @@
 <template>
   <div>
-    <transition name="fade">
-      <div v-if="performingRequest" class="loading"><p>Loading...</p></div>
-    </transition>
+    <transition name="fade"> <Loading v-if="performingRequest" /> </transition>
     <div class="col-12 col-md-8 offset-md-2">
       <div class="card">
         <div class="card-header">
@@ -13,9 +11,7 @@
             <div class="row my-1">
               <div class="col-sm">
                 <div class="form-group">
-                  <label for="Email address:" class="col-4" align="right"
-                    >Email address:</label
-                  >
+                  <label for="Email address:" class="col-4" align="right">Email address:</label>
                   <input
                     class="form-control col-4 d-inline"
                     type="email"
@@ -29,9 +25,7 @@
             <div class="row my-1">
               <div class="col-sm">
                 <div class="form-group">
-                  <label for="Password" class="col-4" align="right"
-                    >Password:</label
-                  >
+                  <label for="Password" class="col-4" align="right">Password:</label>
                   <input
                     class="form-control col-4 d-inline"
                     type="password"
@@ -42,25 +36,14 @@
                 </div>
               </div>
             </div>
-            <div class="form-check form-check-inline">
-              <input
-                type="checkbox"
-                class="form-check-input"
-                v-model="loginForm.isRememberMeChecked"
-              />
-              <label class="form-check-label" for="inlineCheckbox2"
-                >Remember me</label
-              >
-            </div>
+            <transition name="fade">
+              <div v-if="errorMsg !== ''" class="error-msg">
+                <p>{{ errorMsg }}</p>
+              </div>
+            </transition>
             <div class="row">
               <div class="col">
-                <button
-                  class="btn btn-outline-primary m-2"
-                  type="submit"
-                  variant="primary"
-                >
-                  Login
-                </button>
+                <button class="btn btn-outline-primary m-2" type="submit" variant="primary">Login</button>
               </div>
             </div>
           </form>
@@ -79,7 +62,6 @@
 </template>
 
 <script>
-import { saveUserDetails } from "@/common/storage.service";
 import fb from "@/common/firebase.config";
 
 export default {
@@ -89,10 +71,10 @@ export default {
       msg: "Welcome to Login!",
       loginForm: {
         email: "",
-        name: "",
-        isRememberMeChecked: false
+        name: ""
       },
-      performingRequest: false
+      performingRequest: false,
+      errorMsg: ""
     };
   },
   methods: {
@@ -100,28 +82,23 @@ export default {
       evt.preventDefault();
       this.getLogin();
     },
-    onReset(evt) {
-      evt.preventDefault();
+    onReset() {
       this.loginForm.email = "";
       this.loginForm.password = "";
-      this.loginForm.isRememberMeChecked = false;
     },
     getLogin() {
       this.performingRequest = true;
+      console.log("getLogin fb", fb);
       fb.auth
-        .signInWithEmailAndPassword(
-          this.loginForm.email,
-          this.loginForm.password
-        )
+        .signInWithEmailAndPassword(this.loginForm.email, this.loginForm.password)
         .then(user => {
-          this.$root.currentUserDetails = user;
-          console.log("login page", user);
-          saveUserDetails(JSON.stringify(user)); // When Page is relaoded
           this.performingRequest = false;
+          this.$toastr.success("Login Successfully", "Good to have you back!");
           this.$router.push("/");
         })
         .catch(err => {
-          console.log(err);
+          this.onReset();
+          this.$toastr.success(err.message, "Oops, Error!");
           this.performingRequest = false;
         });
     }

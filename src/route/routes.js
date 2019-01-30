@@ -21,6 +21,27 @@ const routes = [
     title: "Register"
   },
   {
+    name: "wishlist",
+    path: "/wishlist",
+    component: () => import("@/components/Wishlist.vue"),
+    isPublic: false,
+    title: "Wishlist"
+  },
+  {
+    name: "profile",
+    path: "/profile",
+    component: () => import("@/components/Profile.vue"),
+    isPublic: false,
+    title: "Profile"
+  },
+  {
+    name: "productView",
+    title: "Product",
+    path: "/product/:id",
+    component: () => import("@/components/Productview.vue"),
+    isPublic: false
+  },
+  {
     path: "*",
     redirect: "/login"
   }
