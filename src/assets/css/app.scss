@@ -51,14 +51,14 @@ $nav-color: #2c3e50;
   background: rgba($dark, 0.4);
   z-index: 9999;
 
-  p {
-    background: $white;
+  div {
+    background: no-repeat;
     width: 150px;
     text-align: center;
     margin: 40vh auto 0;
     padding: 40px 0;
-    border-radius: 3px;
-    box-shadow: 0 0 20px 0 rgba($dark, 0.5);
+    background-image: url(https://loading.io/spinners/interwind/index.ball-interwind-preloader.svg);
+    // background-image: url(https://loading.io/spinners/dna/index.dna-spin-spiral-preloader.svg);
   }
 }
 
@@ -69,4 +69,11 @@ $nav-color: #2c3e50;
     color: $error;
     margin: 0;
   }
+}
+.navbar-brand {
+  color: #9bceb4;
+}
+.navbar-light .navbar-nav .nav-link {
+  color: #9bceb4;
+  cursor: pointer;
 }
