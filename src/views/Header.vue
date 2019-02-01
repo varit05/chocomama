@@ -15,13 +15,13 @@
     </button>
 
     <div class="collapse navbar-collapse justify-content-end" id="navbarTogglerDemo02">
-      <ul class="navbar-nav mt-2 mt-lg-0" v-if="!authUser">
+      <ul class="navbar-nav mt-2 mt-lg-0" v-if="!user">
         <li class="nav-item"><router-link to="login" class="nav-link"> Login</router-link></li>
         <li class="nav-item"><router-link to="register" class="nav-link">Register</router-link></li>
       </ul>
 
-      <ul class="navbar-nav mt-2 mt-lg-0" v-if="!!authUser">
-        <li class="nav-item"><router-link to="profile" class="nav-link" v-text="authUser.displayName"> </router-link></li>
+      <ul class="navbar-nav mt-2 mt-lg-0" v-if="!!user">
+        <li class="nav-item"><router-link to="profile" class="nav-link" v-text="user.displayName"> </router-link></li>
         <li class="nav-item"><router-link to="wishlist" class="nav-link"> WishList </router-link></li>
         <li class="nav-item"><a class="nav-link" v-on:click="logout();"> Logout </a></li>
       </ul>
@@ -55,11 +55,9 @@ export default {
         });
     }
   },
-  computed: {
-    authUser() {
-      console.log("computed", fb.auth.currentUser);
-      return fb.auth.currentUser;
-    }
+  mounted() {
+    this.user = fb.auth.currentUser;
+    console.log("user", this.user);
   }
 };
 </script>

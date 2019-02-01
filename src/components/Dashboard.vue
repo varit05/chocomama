@@ -4,7 +4,11 @@
     <div class="row">
       <div class="col">
         <div class="row">
-          <div class="col-md-3 mb-2 p-1" v-for="product of products" :key="product.id">
+          <div
+            class="col-md-3 mb-2 p-1"
+            v-for="product of products"
+            :key="product.id"
+          >
             <Products
               :product="product"
               v-on:add-to-cart="addToCart(product);"
@@ -14,7 +18,14 @@
         </div>
       </div>
       <transition name="fade">
-        <div v-if="cart"><Cart class="col-12" :items="cart" v-on:remove-from-cart="removeItem($event);" /></div>
+        <div v-if="cart">
+          <Cart
+            class="col-12"
+            :items="cart"
+            v-on:remove-from-cart="removeItem($event);"
+            v-on:process-payment="processPayment($event);"
+          />
+        </div>
       </transition>
     </div>
   </div>
@@ -47,7 +58,9 @@ export default {
   methods: {
     addToCart(product) {
       if (this.cart.length > 0) {
-        let productExists = this.cart.find(productInCart => productInCart.name === product.name);
+        let productExists = this.cart.find(
+          productInCart => productInCart.name === product.name
+        );
         if (productExists) {
           this.updateProduct(product, productExists);
         } else {
@@ -71,18 +84,21 @@ export default {
         .then(response => {
           productToAdd.key = response.key;
           this.cart.push(productToAdd);
-          this.$toastr.success(`Product ${product.name} added to Cart`, "Awesome!");
+          this.$toastr.success(
+            `Product ${product.name} added to Cart`,
+            "Awesome!"
+          );
         });
     },
     removeItem(item) {
       console.log("delete item", item);
       const removeCartURL = `cart/${uid}/${item.key}`;
-      fb.db
-        .ref(removeCartURL)
-        .child(item.key)
-        .remove({});
+      fb.db.ref(removeCartURL).remove();
       this.cart = this.cart.filter(product => product.name !== item.name);
-      this.$toastr.error(`Product ${item.name} is removed from Cart`, "Removed!");
+      this.$toastr.error(
+        `Product ${item.name} is removed from Cart`,
+        "Removed!"
+      );
     },
     updateProduct(product, prevProduct) {
       let productToUpdate = {
@@ -93,9 +109,14 @@ export default {
         .ref(updateCartURL)
         .update(productToUpdate)
         .then(response => {
-          let indexToUpdate = this.cart.findIndex(product => product.name === prevProduct.name);
+          let indexToUpdate = this.cart.findIndex(
+            product => product.name === prevProduct.name
+          );
           this.cart[indexToUpdate].quantity += 1;
-          this.$toastr.info(`Product ${product.name} is updated in cart`, "Awesome!");
+          this.$toastr.info(
+            `Product ${product.name} is updated in cart`,
+            "Awesome!"
+          );
         });
     },
     addToWishlist(product) {
@@ -120,6 +141,43 @@ export default {
           });
           this.performingRequest = false;
         });
+      });
+    },
+    processPayment(total) {
+      let payment = {
+        total,
+        paid: true
+      };
+      fb.db
+        .ref(cartURL)
+        .push(payment)
+        .then(response => {
+          this.$toastr.success(
+            "Your Payment is processed and order is placed",
+            "Congratulations!"
+          );
+          this.cart = [];
+          this.copyCartRecord(cartURL, `order/${uid}`);
+        });
+    },
+    copyCartRecord(oldRef, newRef) {
+      return Promise((resolve, reject) => {
+        oldRef
+          .once("value")
+          .then(snap => {
+            return newRef.set(snap.val());
+          })
+          .then(() => {
+            return oldRef.set(null);
+          })
+          .then(() => {
+            console.log("Done!");
+            resolve();
+          })
+          .catch(err => {
+            console.log(err.message);
+            reject();
+          });
       });
     }
   }
