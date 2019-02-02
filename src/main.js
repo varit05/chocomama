@@ -4,7 +4,6 @@ import Vue from "vue";
 import App from "./App";
 import { router } from "./route";
 import VueToastr2 from "vue-toastr-2";
-
 import fb from "@/common/firebase.config";
 
 import Loading from "@/views/Loading";

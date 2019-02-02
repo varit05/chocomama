@@ -16,7 +16,7 @@
         <div class="card col p-2">
           <div class="p-2">Quantity: {{ this.items.length }}</div>
           <div class="p-2">Total: {{ total | currency }}</div>
-          <button class="btn btn-outline-success">Pay</button>
+          <button @click="checkout(total);" class="btn btn-outline-success">Pay {{ total }}</button>
         </div>
       </div>
     </div>
@@ -24,20 +24,32 @@
 </template>
 
 <script>
+import fb from "@/common/firebase.config";
 export default {
   name: "Cart",
   data() {
     return {
-      products: []
+      products: [],
+      name: "Chocomama Checkout",
+      description: "Pay for your chocolates",
+      currency: "$",
+      image: "",
+      total: ""
     };
   },
   props: ["items"],
   created() {
-    console.log("items", this.items);
+    this.total = this.items.reduce((acc, item) => acc + Number(item.price), 0);
   },
-  computed: {
-    total() {
-      return this.items.reduce((acc, item) => acc + Number(item.price), 0);
+  methods: {
+    checkout(total) {
+      console.log("Payment response", total);
+      this.$emit("process-payment", total);
+    }
+  },
+  watch: {
+    items() {
+      this.total = this.items.reduce((acc, item) => acc + Number(item.price), 0);
     }
   }
 };
