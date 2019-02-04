@@ -1,4 +1,5 @@
 import Vue from "vue";
+// import Firebase from "firebase";
 import Firebase from "firebase";
 import VueFire from "vuefire";
 
@@ -20,12 +21,14 @@ if (!Firebase.apps.length) {
 // firebase utils
 const db = Firebase.database();
 const auth = Firebase.auth();
-const currentUser = auth.currentUser;
-const cartURL = `cart`;
 const usersCollection = db.ref("users");
 const productsCollection = db.ref("products");
-const cartCollection = db.ref(cartURL);
 
-let fb = { db, auth, currentUser, usersCollection, productsCollection, cartCollection };
+let fb = {
+  db,
+  auth,
+  usersCollection,
+  productsCollection
+};
 
 export default fb;

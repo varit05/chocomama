@@ -1,6 +1,6 @@
 <template>
   <div class="text-center">
-    <h1>Chocolate Mall!</h1>
+    <h3>Chocolate Mall!</h3>
     <div class="row">
       <div class="col">
         <div class="row">
@@ -17,16 +17,6 @@
           </div>
         </div>
       </div>
-      <transition name="fade">
-        <div v-if="cart">
-          <Cart
-            class="col-12"
-            :items="cart"
-            v-on:remove-from-cart="removeItem($event);"
-            v-on:process-payment="processPayment($event);"
-          />
-        </div>
-      </transition>
     </div>
   </div>
 </template>
@@ -34,15 +24,12 @@
 <script>
 import fb from "@/common/firebase.config";
 import Products from "@/views/Products";
-import Cart from "@/views/Cart";
 
 const uid = fb.auth.currentUser.uid;
 
-const cartURL = `cart/${uid}`;
-
 export default {
   name: "Dashboard",
-  components: { Products, Cart },
+  components: { Products },
   data() {
     return {
       products: [],
@@ -51,9 +38,6 @@ export default {
   },
   firebase: {
     products: fb.productsCollection
-  },
-  mounted() {
-    this.getCart();
   },
   methods: {
     addToCart(product) {
@@ -90,21 +74,11 @@ export default {
           );
         });
     },
-    removeItem(item) {
-      console.log("delete item", item);
-      const removeCartURL = `cart/${uid}/${item.key}`;
-      fb.db.ref(removeCartURL).remove();
-      this.cart = this.cart.filter(product => product.name !== item.name);
-      this.$toastr.error(
-        `Product ${item.name} is removed from Cart`,
-        "Removed!"
-      );
-    },
     updateProduct(product, prevProduct) {
       let productToUpdate = {
         quantity: prevProduct.quantity + 1
       };
-      const updateCartURL = `cart/${uid}/${prevProduct.key}`;
+      const updateCartURL = `cart/${uid}/products/${prevProduct.key}`;
       fb.db
         .ref(updateCartURL)
         .update(productToUpdate)
@@ -130,55 +104,6 @@ export default {
         fb.db.ref(wishlistURL).push(productToWishlist);
         this.$toastr.success("Product added to Wishlist", "Great!");
       }
-    },
-    getCart() {
-      this.performingRequest = true;
-      fb.db.ref(cartURL).once("value", snapshot => {
-        snapshot.forEach(childSnapshot => {
-          this.cart.push({
-            key: childSnapshot.key,
-            ...childSnapshot.val()
-          });
-          this.performingRequest = false;
-        });
-      });
-    },
-    processPayment(total) {
-      let payment = {
-        total,
-        paid: true
-      };
-      fb.db
-        .ref(cartURL)
-        .push(payment)
-        .then(response => {
-          this.$toastr.success(
-            "Your Payment is processed and order is placed",
-            "Congratulations!"
-          );
-          this.cart = [];
-          this.copyCartRecord(cartURL, `order/${uid}`);
-        });
-    },
-    copyCartRecord(oldRef, newRef) {
-      return Promise((resolve, reject) => {
-        oldRef
-          .once("value")
-          .then(snap => {
-            return newRef.set(snap.val());
-          })
-          .then(() => {
-            return oldRef.set(null);
-          })
-          .then(() => {
-            console.log("Done!");
-            resolve();
-          })
-          .catch(err => {
-            console.log(err.message);
-            reject();
-          });
-      });
     }
   }
 };
