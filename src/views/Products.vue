@@ -10,7 +10,11 @@
       ></div>
     </a>
     <div class="card-footer">
-      <p>Cost: {{ product.price | currency }}</p>
+      <p>
+        {{ priceLabel }}
+        <del v-if="product.wasPrice"> {{ product.wasPrice | currency }}</del>
+        {{ product.price | currency }}
+      </p>
       <div>
         <button
           class="btn btn-outline-success"
@@ -40,6 +44,11 @@
 <script>
 export default {
   name: "Products",
+  data() {
+    return {
+      priceLabel: "MRP: "
+    };
+  },
   props: ["product", "isWishlist"],
   methods: {
     navigateToProductDetails(product) {

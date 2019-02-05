@@ -21,11 +21,25 @@ const routes = [
     title: "Register"
   },
   {
+    name: "cart",
+    path: "/cart",
+    component: () => import("@/components/Cart.vue"),
+    isPublic: false,
+    title: "Cart"
+  },
+  {
     name: "wishlist",
     path: "/wishlist",
     component: () => import("@/components/Wishlist.vue"),
     isPublic: false,
     title: "Wishlist"
+  },
+  {
+    name: "orders",
+    path: "/orders",
+    component: () => import("@/components/Orders.vue"),
+    isPublic: false,
+    title: "Orders"
   },
   {
     name: "profile",
