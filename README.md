@@ -1,4 +1,4 @@
-# test-project
+# Chocomama- Chocolate shopping online!
 
 > A Vue.js project
 
