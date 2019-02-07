@@ -6,7 +6,9 @@
       </div>
       <div
         class="card-body"
-        v-bind:style="{ 'background-image': 'url(' + product.img + ')' }"
+        v-bind:style="{
+          'background-image': 'url(' + product.img + ')'
+        }"
       ></div>
     </a>
     <div class="card-footer">
@@ -16,10 +18,7 @@
         {{ product.price | currency }}
       </p>
       <div>
-        <button
-          class="btn btn-outline-success"
-          @click="$emit('add-to-cart', product);"
-        >
+        <button class="btn btn-outline-success" @click="addToCart(product);">
           Add To Cart
         </button>
         <button
@@ -52,7 +51,13 @@ export default {
   props: ["product", "isWishlist"],
   methods: {
     navigateToProductDetails(product) {
-      this.$router.push({ path: `/product/${product[".key"]}` });
+      this.$router.push({
+        path: `/product/${product[".key"]}`
+      });
+    },
+    addToCart(product) {
+      console.log("product", product);
+      this.$store.dispatch("addToCart", product);
     }
   }
 };
