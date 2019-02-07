@@ -41,38 +41,37 @@ export default {
   },
   methods: {
     addToCart(product) {
-      if (this.cart.length > 0) {
-        let productExists = this.cart.find(
-          productInCart => productInCart.name === product.name
-        );
-        if (productExists) {
-          this.updateProduct(product, productExists);
-        } else {
-          this.callAddToCart(product);
-        }
-      } else {
-        this.callAddToCart(product);
-      }
+      this.$store.dispatch("addToCart", product);
+      // if (this.cart.length > 0) {
+      //   let productExists = this.cart.find(productInCart => productInCart.name === product.name);
+      //   if (productExists) {
+      //     this.updateProduct(product, productExists);
+      //   } else {
+      //     this.callAddToCart(product);
+      //   }
+      // } else {
+      //   this.callAddToCart(product);
+      // }
     },
     callAddToCart(product) {
-      let productToAdd = {
-        name: product.name,
-        price: product.price,
-        img: product.img,
-        id: product[".key"],
-        quantity: 1
-      };
-      fb.db
-        .ref(cartURL)
-        .push(productToAdd)
-        .then(response => {
-          productToAdd.key = response.key;
-          this.cart.push(productToAdd);
-          this.$toastr.success(
-            `Product ${product.name} added to Cart`,
-            "Awesome!"
-          );
-        });
+      // let productToAdd = {
+      //   name: product.name,
+      //   price: product.price,
+      //   img: product.img,
+      //   id: product[".key"],
+      //   quantity: 1
+      // };
+      // fb.db
+      //   .ref(cartURL)
+      //   .push(productToAdd)
+      //   .then(response => {
+      //     productToAdd.key = response.key;
+      //     this.cart.push(productToAdd);
+      //     this.$toastr.success(
+      //       `Product ${product.name} added to Cart`,
+      //       "Awesome!"
+      //     );
+      //   });
     },
     updateProduct(product, prevProduct) {
       let productToUpdate = {
@@ -98,7 +97,8 @@ export default {
       let productToWishlist = {
         name: product.name,
         price: product.price,
-        img: product.img
+        img: product.img,
+        ".key": product[".key"]
       };
       if (uid) {
         fb.db.ref(wishlistURL).push(productToWishlist);

@@ -38,6 +38,7 @@
 
 <script>
 import fb from "@/common/firebase.config";
+import { mapGetters } from "vuex";
 
 const uid = fb.auth.currentUser.uid;
 
@@ -46,99 +47,37 @@ export default {
   name: "Cart",
   data() {
     return {
-      items: [],
+      // items: [],
       name: "Chocomama Checkout",
       description: "Pay for your chocolates",
       currency: "$",
       image: "",
-      total: "",
+      // total: "",
       performingRequest: false
     };
   },
   created() {
-    this.getCart();
-    this.total = this.items.reduce((acc, item) => acc + Number(item.price), 0);
+    // this.getCart();
+    // this.total = this.items.reduce((acc, item) => acc + Number(item.price), 0);
   },
-  methods: {
-    checkout(total) {
-      this.processPayment(total);
+  methods: {},
+  computed: {
+    // ...mapGetters([{ items: "getCart" }]),
+    items() {
+      return this.$store.state.cart;
     },
-    getCart() {
-      this.performingRequest = true;
-      fb.db
-        .ref(`${cartURL}/products`)
-        .once("value", snapshot => {
-          snapshot.forEach(childSnapshot => {
-            this.items.push({
-              key: childSnapshot.key,
-              ...childSnapshot.val()
-            });
-            this.performingRequest = false;
-          });
-        })
-        .catch(err => {
-          this.performingRequest = false;
-        });
-    },
-    removeItem(item) {
-      console.log("delete item", item);
-      const removeCartURL = `cart/${uid}/products/${item.key}`;
-      fb.db.ref(removeCartURL).remove();
-      this.items = this.items.filter(product => product.name !== item.name);
-      this.$toastr.error(
-        `Product ${item.name} is removed from Cart`,
-        "Removed!"
-      );
-    },
-    copyCartRecord(oldRef, newRef) {
-      return new Promise((resolve, reject) => {
-        console.log("oldRef", oldRef, newRef);
-        fb.db
-          .ref(oldRef)
-          .once("value")
-          .then(snap => {
-            return fb.db.ref(newRef).set(snap.val());
-          })
-          .then(() => {
-            return fb.db.ref(oldRef).set(null);
-          })
-          .then(() => {
-            console.log("Done!");
-            resolve();
-          })
-          .catch(err => {
-            console.log(err.message);
-            reject();
-          });
-      });
-    },
-    processPayment(total) {
-      let payment = {
-        total,
-        paid: true
-      };
-      fb.db
-        .ref(cartURL)
-        .child("/payment")
-        .push(payment)
-        .then(response => {
-          this.$toastr.success(
-            "Your Payment is processed and order is placed",
-            "Congratulations!"
-          );
-          this.items = [];
-          const isCopied = this.copyCartRecord(cartURL, `orders/${uid}`);
-          console.log("isCopied", isCopied);
-        });
+    total() {
+      console.log("this.items", this.items);
+      return this.items.reduce((acc, item) => acc + Number(item.price), 0);
     }
   },
   watch: {
-    items() {
-      this.total = this.items.reduce(
-        (acc, item) => acc + Number(item.price),
-        0
-      );
-    }
+    // items() {
+    //   this.total = this.items.reduce(
+    //     (acc, item) => acc + Number(item.price),
+    //     0
+    //   );
+    // }
   }
 };
 </script>

@@ -2,9 +2,11 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from "vue";
 import App from "./App";
-import { router } from "./route";
-import VueToastr2 from "vue-toastr-2";
 import fb from "@/common/firebase.config";
+import store from "./store";
+import { router } from "./route";
+
+import VueToastr2 from "vue-toastr-2";
 
 import Loading from "@/views/Loading";
 
@@ -13,7 +15,6 @@ window.toastr = require("toastr");
 const toastrOption = {
   positionClass: "toast-top-center"
 };
-
 Vue.use(VueToastr2, toastrOption);
 
 Vue.config.productionTip = false;
@@ -28,6 +29,7 @@ fb.auth.onAuthStateChanged(user => {
     new Vue({
       el: "#app",
       router,
+      store,
       components: { App, Loading },
       template: "<App/>"
     });
