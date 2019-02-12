@@ -2,7 +2,7 @@ const routes = [
   {
     name: "dashboard",
     path: "/",
-    component: () => import("@/components/Dashboard.vue"),
+    component: () => import(/* webpackChunkName: "group-foo" */ "@/components/Dashboard.vue"),
     isPublic: false,
     title: "Dashboard"
   },

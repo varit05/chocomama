@@ -1,0 +1,19 @@
+.loading {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba($dark, 0.4);
+    z-index: 9999;
+  
+    div {
+      background: no-repeat;
+      width: 150px;
+      text-align: center;
+      margin: 40vh auto 0;
+      padding: 40px 0;
+      background-image: url(https://loading.io/spinners/interwind/index.ball-interwind-preloader.svg);
+      // background-image: url(https://loading.io/spinners/dna/index.dna-spin-spiral-preloader.svg);
+    }
+}
