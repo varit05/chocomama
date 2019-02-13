@@ -16,10 +16,14 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    LOAD_TO_CART(state, items) {
+      state.cart = items;
+    },
     ADD_TO_CART(state, item) {
-      console.log("inside ADD_TO_CART", state, item);
       state.cart.push(item);
-      console.log("after inside ADD_TO_CART", state, item);
+    },
+    REMOVE_FROM_CART(state, item) {
+      state.cart = state.cart.filter(product => product.name !== item.name);
     }
   },
   actions: {
@@ -42,6 +46,30 @@ export default new Vuex.Store({
           context.commit("ADD_TO_CART", payload);
           // this.$toastr.success(`Product ${product.name} added to Cart`, "Awesome!");
         });
+    },
+    getCart: context => {
+      const uid = fb.auth.currentUser.uid;
+      const cartURL = `cart/${uid}/products`;
+      let items = [];
+      fb.db.ref(cartURL).once("value", snapshot => {
+        snapshot.forEach(childSnapshot => {
+          items.push({
+            key: childSnapshot.key,
+            ...childSnapshot.val()
+          });
+        });
+      });
+      context.commit("LOAD_TO_CART", items);
+    },
+    removeFromCart: (context, payload)  => {
+      const uid = fb.auth.currentUser.uid;
+      console.log("payload", payload);
+      const removeCartURL = `cart/${uid}/products/${payload.key}`;
+      fb.db.ref(removeCartURL).remove();
+      context.commit("REMOVE_FROM_CART", payload);
+      // this.$toastr.error(
+      //   `Product ${item.name} is removed from Cart`,
+      //   "Removed!"
     }
   }
 });
