@@ -57,12 +57,16 @@ export default {
     };
   },
   created() {
+    this.$store.dispatch("getCart");
     // this.getCart();
     // this.total = this.items.reduce((acc, item) => acc + Number(item.price), 0);
   },
-  methods: {},
+  methods: {
+    removeItem(item) {
+      this.$store.dispatch('removeFromCart', item);
+    }
+  },
   computed: {
-    // ...mapGetters([{ items: "getCart" }]),
     items() {
       return this.$store.state.cart;
     },
