@@ -41,6 +41,7 @@ export default {
   },
   methods: {
     addToCart(product) {
+      product.quantity = 1;
       this.$store.dispatch("addToCart", product);
       // if (this.cart.length > 0) {
       //   let productExists = this.cart.find(productInCart => productInCart.name === product.name);
@@ -52,26 +53,6 @@ export default {
       // } else {
       //   this.callAddToCart(product);
       // }
-    },
-    callAddToCart(product) {
-      // let productToAdd = {
-      //   name: product.name,
-      //   price: product.price,
-      //   img: product.img,
-      //   id: product[".key"],
-      //   quantity: 1
-      // };
-      // fb.db
-      //   .ref(cartURL)
-      //   .push(productToAdd)
-      //   .then(response => {
-      //     productToAdd.key = response.key;
-      //     this.cart.push(productToAdd);
-      //     this.$toastr.success(
-      //       `Product ${product.name} added to Cart`,
-      //       "Awesome!"
-      //     );
-      //   });
     },
     updateProduct(product, prevProduct) {
       let productToUpdate = {

@@ -67,7 +67,6 @@ export default {
     }
   },
   computed: {
-    // ...mapGetters([{ items: "getCart" }]),
     items() {
       return this.$store.state.cart;
     },
