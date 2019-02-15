@@ -8,7 +8,7 @@
             <ul class="card list-group">
               <li
                 class="list-group-item border-none mt-2"
-                v-for="item in items"
+                v-for="item in cart"
                 :key="item.id"
               >
                 {{ item.name }} - {{ item.price | currency }} -
@@ -23,7 +23,7 @@
             </ul>
           </div>
           <div class="card col-12 col-md-4 p-2">
-            <div class="p-2">Quantity: {{ this.items.length }}</div>
+            <div class="p-2">Quantity: {{ this.cart.length }}</div>
             <div class="p-2">Total: {{ total | currency }}</div>
             <button @click="checkout(total);" class="btn btn-outline-success">
               Pay {{ total | currency }}
@@ -37,51 +37,28 @@
 </template>
 
 <script>
-import fb from "@/common/firebase.config";
 import { mapGetters } from "vuex";
 
-const uid = fb.auth.currentUser.uid;
-
-const cartURL = `cart/${uid}`;
 export default {
   name: "Cart",
   data() {
     return {
-      // items: [],
       name: "Chocomama Checkout",
       description: "Pay for your chocolates",
       currency: "$",
-      image: "",
-      // total: "",
       performingRequest: false
     };
   },
   created() {
-    this.$store.dispatch("getCart");
-    // this.getCart();
-    // this.total = this.items.reduce((acc, item) => acc + Number(item.price), 0);
+    this.$store.dispatch("cartModule/getCart");
   },
   methods: {
     removeItem(item) {
-      this.$store.dispatch('removeFromCart', item);
+      this.$store.dispatch("cartModule/removeFromCart", item);
     }
   },
   computed: {
-    items() {
-      return this.$store.state.cart;
-    },
-    total() {
-      console.log("this.items", this.items);
-      return this.items.reduce((acc, item) => acc + Number(item.price), 0);
-    }
-  },
-  watch: {
-    // items() {
-    //   this.total = this.items.reduce(
-    //     (acc, item) => acc + Number(item.price),
-    //     0
-    //   );
-    // }
+    ...mapGetters("cartModule", ["cart", "total"])
   }
 };
 </script>

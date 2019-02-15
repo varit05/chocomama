@@ -24,14 +24,14 @@
         <button
           v-if="!isWishlist"
           class="ml-1 btn btn-outline-info"
-          @click="$emit('add-to-wishlist', product);"
+          @click="addToWishlist(product);"
         >
           WishList
         </button>
         <button
           v-if="isWishlist"
           class="ml-1 btn btn-outline-info"
-          @click="$emit('remove-from-wishlist', product);"
+          @click="removeFromWishlist(product);"
         >
           Remove WishList
         </button>
@@ -56,8 +56,13 @@ export default {
       });
     },
     addToCart(product) {
-      console.log("product", product);
-      this.$store.dispatch("addToCart", product);
+      this.$store.dispatch("cartModule/addToCart", product);
+    },
+    addToWishlist(product) {
+      this.$store.dispatch("wishlistModule/addToWishlist", product);
+    },
+    removeFromWishlist(product) {
+      this.$store.dispatch("wishlistModule/removeFromWishlist", product);
     }
   }
 };
