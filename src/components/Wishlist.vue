@@ -23,51 +23,29 @@
   </div>
 </template>
 <script>
-import fb from "@/common/firebase.config";
+import { mapGetters } from "vuex";
 import Products from "@/views/Products";
 
-const uid = fb.auth.currentUser.uid;
 export default {
   name: "Wishlist",
-  data() {
-    return {
-      wishlist: [],
-      performingRequest: false
-    };
-  },
   components: { Products },
   props: ["wishlistProducts"],
-  mounted() {
-    const wishlistURL = `wishlist/${uid}`;
-    fb.db.ref(wishlistURL).once("value", snapshot => {
-      snapshot.forEach(childSnapshot => {
-        this.wishlist.push({
-          key: childSnapshot.key,
-          ...childSnapshot.val()
-        });
-      });
-    });
+  created() {
+    this.$store.dispatch("wishlistModule/getWishlist");
   },
   methods: {
     removeFromWishlist(product) {
-      const removeWishlistURL = `wishlist/${uid}/${product.key}`;
-      fb.db
-        .ref(removeWishlistURL)
-        .remove()
-        .then(response => {
-          this.wishlist = this.wishlist.filter(
-            item => product.name !== item.name
-          );
-          this.$toastr.error(
-            `Product ${product.name} is removed from Wishlist`,
-            "Removed!"
-          );
-        });
+      this.$store.dispatch("wishlistModule/removeFromWishlist");
     }
   },
   computed: {
+    ...mapGetters("wishlistModule", ["wishlist"]),
     isWishlist() {
       return this.$route.name === "wishlist";
+    },
+    performingRequest() {
+      console.log(this.$store.getters.performingRequest);
+      return this.$store.getters.performingRequest;
     }
   }
 };
