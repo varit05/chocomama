@@ -12,7 +12,6 @@
           <Products
             :product="product"
             :isWishlist="isWishlist"
-            v-on:remove-from-wishlist="removeFromWishlist(product);"
           />
         </div>
       </div>
