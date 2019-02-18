@@ -3,13 +3,15 @@ import Vuex from "vuex";
 
 import cartModule from "@/store/modules/cartModule";
 import wishlistModule from "@/store/modules/wishlistModule";
+import productModule from "@/store/modules/productModule";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   modules: {
     cartModule,
-    wishlistModule
+    wishlistModule,
+    productModule
   },
   state: {
     performingRequest: false

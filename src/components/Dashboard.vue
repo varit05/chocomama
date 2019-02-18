@@ -2,17 +2,17 @@
   <div class="text-center">
     <h3>Chocolate Mall!</h3>
     <div class="row">
-      <div class="col">
+      <div class="col-md-2 d-sm-none d-xs-none d-md-block">
+        <ProductFilters />
+      </div>
+      <div class="col-md-10">
         <div class="row">
           <div
-            class="col-md-3 mb-2 p-1"
+            class="col-xs-12 col-sm-6 col-md-3 mb-2 p-1"
             v-for="product of products"
             :key="product.id"
           >
-            <Products
-              :product="product"
-              v-on:add-to-wishlist="addToWishlist(product);"
-            ></Products>
+            <Products :product="product"></Products>
           </div>
         </div>
       </div>
@@ -21,23 +21,23 @@
 </template>
 
 <script>
-import fb from "@/common/firebase.config";
+import { mapGetters } from "vuex";
 import Products from "@/views/Products";
+import ProductFilters from "@/views/ProductFilters";
 
 export default {
   name: "Dashboard",
-  components: { Products },
+  components: { Products, ProductFilters },
   data() {
-    return {
-      products: []
-    };
-  },
-  firebase: {
-    products: fb.productsCollection
+    return {};
   },
   created() {
+    this.$store.dispatch("productModule/getProduct");
     this.$store.dispatch("cartModule/getCart");
     this.$store.dispatch("wishlistModule/getWishlist");
+  },
+  computed: {
+    ...mapGetters("productModule", ["products"])
   }
 };
 </script>
