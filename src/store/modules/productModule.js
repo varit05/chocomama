@@ -27,7 +27,6 @@ const actions = {
         });
       });
     });
-    console.log(products);
     commit("LOAD_PRODUCT", products);
   }
 };
