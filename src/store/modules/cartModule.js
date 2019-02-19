@@ -57,9 +57,8 @@ const actions = {
       .push(payload)
       .then(response => {
         commit("setLoading", false, { root: true });
-        payload.key = response.key;
+        payload.cartKey = response.key;
         commit("ADD_TO_CART", payload);
-        // this.$toastr.success(`Product ${product.name} added to Cart`, "Awesome!");
       });
   },
   updateProduct: ({ commit }, payload) => {
@@ -74,7 +73,7 @@ const actions = {
       .then(response => {
         commit("UPDATE_CART", payload);
         // this.$toastr.info(
-        //   `Product ${product.name} is updated in cart`,
+        //   `Product ${payload.name} is updated in cart`,
         //   "Awesome!"
         // );
       });
@@ -86,7 +85,7 @@ const actions = {
     fb.db.ref(cartURL).once("value", snapshot => {
       snapshot.forEach(childSnapshot => {
         items.push({
-          key: childSnapshot.key,
+          cartKey: childSnapshot.key,
           ...childSnapshot.val()
         });
       });
@@ -95,13 +94,16 @@ const actions = {
   },
   removeFromCart: (context, payload) => {
     const uid = fb.auth.currentUser.uid;
-    console.log("payload", payload);
-    const removeCartURL = `cart/${uid}/products/${payload.key}`;
-    fb.db.ref(removeCartURL).remove();
-    context.commit("REMOVE_FROM_CART", payload);
-    // this.$toastr.error(
-    //   `Product ${item.name} is removed from Cart`,
-    //   "Removed!"
+    const removeCartURL = `cart/${uid}/products/${payload.cartKey}`;
+    fb.db.ref(removeCartURL).remove().then(res => {
+      // this.$toastr.error(
+      //   `Product ${payload.name} is removed from Cart`,
+      //   "Removed!");
+      context.commit("REMOVE_FROM_CART", payload);
+    })
+    .catch(err => {
+      console.log(err);
+    });
   }
 };
 

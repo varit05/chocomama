@@ -19,7 +19,7 @@
       </p>
       <div>
         <button class="btn btn-outline-success" @click="addToCart(product);">
-          Add To Cart
+          BUY
         </button>
         <button
           v-if="!isWishlist"
@@ -56,10 +56,14 @@ export default {
       });
     },
     addToCart(product) {
-      this.$store.dispatch("cartModule/addToCart", product);
+      this.$store.dispatch("cartModule/addToCart", product).then(() => {
+        this.$toastr.success(`Product ${product.name} added to Cart`, "Awesome!");
+      });
     },
     addToWishlist(product) {
-      this.$store.dispatch("wishlistModule/addToWishlist", product);
+      this.$store.dispatch("wishlistModule/addToWishlist", product).then(() => {
+        this.$toastr.success("Product added to Wishlist", "Great!");
+      });
     },
     removeFromWishlist(product) {
       this.$store.dispatch("wishlistModule/removeFromWishlist", product);
