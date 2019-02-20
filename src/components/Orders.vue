@@ -33,7 +33,6 @@ export default {
           key: childSnapshot.key,
           ...childSnapshot.val()
         });
-        console.log(this.orders);
       });
     });
   }

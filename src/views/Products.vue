@@ -57,7 +57,6 @@ export default {
     },
     addToCart(product) {
       this.$store.dispatch("cartModule/addToCart", product).then(() => {
-        this.$toastr.success(`Product ${product.name} added to Cart`, "Awesome!");
       });
     },
     addToWishlist(product) {

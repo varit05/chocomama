@@ -6,16 +6,17 @@ import fb from "@/common/firebase.config";
 import store from "./store";
 import { router } from "./route";
 
-import VueToastr2 from "vue-toastr-2";
-
 import Loading from "@/views/Loading";
+import Snotify, { SnotifyPosition } from 'vue-snotify';
+import 'vue-snotify/styles/material.css'; 
 
-window.toastr = require("toastr");
+const options = {
+  toast: {
+    position: SnotifyPosition.rightTop
+  }
+}
 
-const toastrOption = {
-  positionClass: "toast-top-center"
-};
-Vue.use(VueToastr2, toastrOption);
+Vue.use(Snotify, options);
 
 Vue.config.productionTip = false;
 //Global Filter Registration

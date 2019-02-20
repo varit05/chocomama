@@ -14,16 +14,31 @@ export default new Vuex.Store({
     productModule
   },
   state: {
-    performingRequest: false
+    performingRequest: false,
+    flash: false
   },
   mutations: {
     setLoading(state, payload) {
       state.performingRequest = payload;
+    },
+    setNotification(state, {type, message, title}) {
+      state.flash = { 
+        type,
+        title, 
+        message
+      }
+    },
+    flashNotification (state) {
+      state.flash = null
     }
   },
   getters: {
     performingRequest(state) {
       return state.performingRequest;
+    },
+    flash(state) {
+      console.log(state);
+      return state.flash;
     }
   }
 });
