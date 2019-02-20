@@ -56,13 +56,10 @@ export default {
       });
     },
     addToCart(product) {
-      this.$store.dispatch("cartModule/addToCart", product).then(() => {
-      });
+      this.$store.dispatch("cartModule/addToCart", product);
     },
     addToWishlist(product) {
-      this.$store.dispatch("wishlistModule/addToWishlist", product).then(() => {
-        this.$toastr.success("Product added to Wishlist", "Great!");
-      });
+      this.$store.dispatch("wishlistModule/addToWishlist", product);
     },
     removeFromWishlist(product) {
       this.$store.dispatch("wishlistModule/removeFromWishlist", product);

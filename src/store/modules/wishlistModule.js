@@ -17,7 +17,7 @@ const mutations = {
     state.wishlist.push(item);
   },
   REMOVE_FROM_WISHLIST(state, item) {
-    state.wishlist = state.wishlist.filter(product => product.key !== item.key);
+    state.wishlist = state.wishlist.filter(product => product.wishlistKey !== item.wishlistKey);
   }
 };
 
@@ -30,6 +30,11 @@ const actions = {
       console.log("isProductWishlisted", isProductWishlisted);
       if (isProductWishlisted) {
         console.log("Product is already wishlisted!");
+        commit("setNotification", {
+          type: 'error',
+          title: 'Error',
+          message: `Product ${payload.name} is already wishlisted`,
+        }, { root: true });
       } else {
         dispatch("callAddToWishlist", payload);
       }
@@ -46,10 +51,19 @@ const actions = {
       .push(payload)
       .then(response => {
         payload.key = response.key;
+        commit("setNotification", {
+          type: 'success',
+          message: `Product ${payload.name} is added in Wishlist`,
+          title: "Great!"
+        }, { root: true });
         commit("ADD_TO_WISHLIST", payload);
-        // this.$toastr.success("Product added to Wishlist", "Great!");
       })
       .catch(error => {
+        commit("setNotification", {
+          type: 'error',
+          title: "Error!",
+          message: `Error while wishlisting product`,
+        }, { root: true });
         console.log(error);
       });
   },
@@ -62,7 +76,7 @@ const actions = {
       fb.db.ref(cartURL).once("value", snapshot => {
         snapshot.forEach(childSnapshot => {
           wishListitems.push({
-            key: childSnapshot.key,
+            wishlistKey: childSnapshot.key,
             ...childSnapshot.val()
           });
         });
@@ -73,16 +87,17 @@ const actions = {
   },
   removeFromWishlist: (context, payload) => {
     const uid = fb.auth.currentUser.uid;
-    const removeWishlistURL = `wishlist/${uid}/${payload.key}`;
+    const removeWishlistURL = `wishlist/${uid}/${payload.wishlistKey}`;
     fb.db
       .ref(removeWishlistURL)
       .remove()
       .then(response => {
         context.commit("REMOVE_FROM_WISHLIST", payload);
-        // this.$toastr.error(
-        //   `Product ${product.name} is removed from Wishlist`,
-        //   "Removed!"
-        // );
+        context.commit("setNotification", {
+          type: 'error',
+          title: "Removed!",
+          message: `Product ${payload.name} is removed from Wishlist`
+        }, { root: true });
       });
   }
 };

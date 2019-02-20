@@ -23,10 +23,12 @@ export default {
   },
   watch: {
     notification() {
-      console.log('inside notification', this.notification);
-      const { type, title, message: body } = this.$store.state.flash;
-      const toast = this.$snotify[type](body, title);
-      toast.on('destroyed', (t) => { this.$store.commit('flashNotification') });
+      if(this.notification) {
+        console.log('inside notification', this.notification);
+        const { type, title, message: body } = this.notification;
+        const toast = this.$snotify[type](body, title);
+        toast.on('destroyed', (t) => { this.$store.commit('flashNotification') });
+      }
     }
   },
   computed: {
