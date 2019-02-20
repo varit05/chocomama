@@ -112,14 +112,20 @@ export default {
             })
             .then(updateUser => {
               this.performingRequest = false;
-              this.$toastr.success("Register Successfully", `Hi ${this.signupForm.name}`);
+              this.this.$snotify.simple({
+                "title": "Register Successfully", 
+                "message": `Hi ${this.signupForm.name}`
+              });
               this.$router.push("/");
             });
         })
         .catch(err => {
           this.onReset();
           this.performingRequest = false;
-          this.$toastr.error(err.message, `Oops! Error`);
+          this.this.$snotify.simple({
+            "title": "Oops, Error!", 
+            "message": err.message
+          });
           this.errorMsg = err.message;
         });
     }

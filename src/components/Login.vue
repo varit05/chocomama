@@ -88,17 +88,22 @@ export default {
     },
     getLogin() {
       this.performingRequest = true;
-      console.log("getLogin fb", fb);
       fb.auth
         .signInWithEmailAndPassword(this.loginForm.email, this.loginForm.password)
         .then(user => {
           this.performingRequest = false;
-          this.$toastr.success("Login Successfully", "Good to have you back!");
+          this.this.$snotify.simple({
+            "title": "Login Successfully", 
+            "message": "Good to have you back!"
+          });
           this.$router.push("/");
         })
         .catch(err => {
           this.onReset();
-          this.$toastr.success(err.message, "Oops, Error!");
+          this.this.$snotify.simple({
+            "title": "Oops, Error!", 
+            "message": err.message
+          });
           this.performingRequest = false;
         });
     }

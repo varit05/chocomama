@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <div class="container-fluid text-dark text-center">
+      <vue-snotify />
       <Header-View />
       <transition name="slide-fade" mode="out-in">
         <router-view class="content"></router-view>
@@ -19,7 +20,22 @@ export default {
   components: {
     HeaderView,
     FooterView
-  }
+  },
+  watch: {
+    notification() {
+      if(this.notification) {
+        console.log('inside notification', this.notification);
+        const { type, title, message: body } = this.notification;
+        const toast = this.$snotify[type](body, title);
+        toast.on('destroyed', (t) => { this.$store.commit('flashNotification') });
+      }
+    }
+  },
+  computed: {
+    notification() {
+      return this.$store.getters.flash
+    } 
+  },
 };
 </script>
 

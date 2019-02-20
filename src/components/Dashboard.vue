@@ -17,6 +17,7 @@
         </div>
       </div>
     </div>
+    <vue-snotify />
   </div>
 </template>
 
@@ -37,7 +38,7 @@ export default {
     this.$store.dispatch("wishlistModule/getWishlist");
   },
   computed: {
-    ...mapGetters("productModule", ["products"])
-  }
+    ...mapGetters("productModule", ["products"]), 
+  },
 };
 </script>

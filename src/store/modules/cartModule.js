@@ -58,24 +58,31 @@ const actions = {
       .then(response => {
         commit("setLoading", false, { root: true });
         payload.cartKey = response.key;
+        commit("setNotification", {
+          type: 'success',
+          title: `Product ${payload.name} is added in cart`,
+          message: "Awesome!"
+        }, { root: true });
         commit("ADD_TO_CART", payload);
       });
   },
   updateProduct: ({ commit }, payload) => {
     const uid = fb.auth.currentUser.uid;
-    let productToUpdate = {
+    let productToUpdate = { 
+      ...payload,
       quantity: payload.quantity + 1
     };
-    const updateCartURL = `cart/${uid}/products/${payload.key}`;
+    const updateCartURL = `cart/${uid}/products/${payload.cartKey}`;
     fb.db
       .ref(updateCartURL)
       .update(productToUpdate)
       .then(response => {
         commit("UPDATE_CART", payload);
-        // this.$toastr.info(
-        //   `Product ${payload.name} is updated in cart`,
-        //   "Awesome!"
-        // );
+        commit("setNotification", {
+          type: 'info',
+          title: `Product ${payload.name} is updated in cart`,
+          message: "Awesome!"
+        }, { root: true });
       });
   },
   getCart: context => {
@@ -96,9 +103,11 @@ const actions = {
     const uid = fb.auth.currentUser.uid;
     const removeCartURL = `cart/${uid}/products/${payload.cartKey}`;
     fb.db.ref(removeCartURL).remove().then(res => {
-      // this.$toastr.error(
-      //   `Product ${payload.name} is removed from Cart`,
-      //   "Removed!");
+      context.commit("setNotification", {
+        type: 'error',
+        title: `Product ${payload.name} is removed from cart`,
+        message: "Removed"
+      }, { root: true });
       context.commit("REMOVE_FROM_CART", payload);
     })
     .catch(err => {
