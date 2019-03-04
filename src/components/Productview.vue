@@ -1,12 +1,27 @@
 <template>
-  <section>
+  <section class="container">
     <transition name="fade"> <Loading v-if="performingRequest" /> </transition>
-    <div class="row" v-if="products" v-for="product in products" :key="product.id">
-      <div class="col-xs-12 col-md-4"><img :src="product.img" alt="product image" width="100%" height="100%" /></div>
-      <div class="col-xs-12 col-md-8 ">
-        <h3>Name: {{ product.name }}</h3>
-        <h4>Id: {{ this.id }}</h4>
-        <h5>Price: {{ product.price | currency }}</h5>
+    <div
+      class="row"
+      v-for="product in products"
+      :key="product.id"
+    >
+      <div class="col-12 col-sm-6">
+        <img
+          :src="product.img"
+          alt="product image"
+          width="100%"
+          height="100%"
+        />
+      </div>
+      <div class="col-12 col-sm-6 text-left">
+        <h2 v-text="product.name"></h2>
+        <h4 class="brand" v-text="product.brand"></h4>
+        <p class="col-12 col-8" v-text="product.description"></p>
+        <h2>{{ product.price | currency }}</h2>
+        <button class="btn btn-outline-success" @click="addToCart(product);">
+          Add to Cart
+        </button>
       </div>
     </div>
   </section>
@@ -35,6 +50,16 @@ export default {
       });
       this.products.push(obj);
     });
+  },
+  methods: {
+    addToCart(product) {
+      this.$store.dispatch("cartModule/addToCart", product);
+    }
   }
 };
 </script>
+<style>
+.brand {
+  border-bottom: 1px solid #d9d9d9;
+}
+</style>

@@ -92,7 +92,7 @@ export default {
         .signInWithEmailAndPassword(this.loginForm.email, this.loginForm.password)
         .then(user => {
           this.performingRequest = false;
-          this.this.$snotify.simple({
+          this.$snotify.simple({
             "title": "Login Successfully", 
             "message": "Good to have you back!"
           });
@@ -100,7 +100,7 @@ export default {
         })
         .catch(err => {
           this.onReset();
-          this.this.$snotify.simple({
+          this.$snotify.simple({
             "title": "Oops, Error!", 
             "message": err.message
           });
