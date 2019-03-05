@@ -3,7 +3,7 @@
     <h3>Chocolate Mall!</h3>
     <div class="row">
       <div class="col-md-2 d-sm-none d-xs-none d-md-block">
-        <ProductFilters />
+        <!-- <ProductFilters /> -->
       </div>
       <div class="col-md-10">
         <div class="row">
@@ -24,11 +24,11 @@
 <script>
 import { mapGetters } from "vuex";
 import Products from "@/views/Products";
-import ProductFilters from "@/views/ProductFilters";
+// import ProductFilters from "@/views/ProductFilters";
 
 export default {
   name: "Dashboard",
-  components: { Products, ProductFilters },
+  components: { Products },
   data() {
     return {};
   },
