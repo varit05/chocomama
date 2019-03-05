@@ -115,6 +115,6 @@
 </template>
 <script>
 export default {
-  name: "ProductFilter"
+  name: "ProductFilters"
 };
 </script>
