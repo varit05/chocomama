@@ -52,7 +52,7 @@ export default {
   methods: {
     navigateToProductDetails(product) {
       this.$router.push({
-        path: `/product/${product[".key"]}`
+        path: `/product/${product["key"]}`
       });
     },
     addToCart(product) {

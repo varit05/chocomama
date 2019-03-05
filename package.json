@@ -4,6 +4,8 @@
   "description": "",
   "main": "src/main.js",
   "private": true,
+  "author": "Varit J Patel",
+  "license": "MIT",
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
@@ -90,5 +92,10 @@
     "last 2 versions",
     "not ie <= 8"
   ],
-  "keywords": []
+  "keywords": [
+    "vue",
+    "shopping-site",
+    "firebase",
+    "vuex"
+  ]
 }
